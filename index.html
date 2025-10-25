@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧠 Ultimate Quiz Experience</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Particle Background -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-content">
+      <div class="logo-3d">🧠</div>
+      <h1 class="glitch" data-text="BRAIN QUEST">BRAIN QUEST</h1>
+      <p class="tagline">Test Your Knowledge. Challenge Your Mind.</p>
+      
+      <div class="difficulty-selector">
+        <h3>Choose Your Challenge</h3>
+        <div class="difficulty-buttons">
+          <button class="diff-btn" data-time="60" data-difficulty="easy">
+            <span class="diff-icon">🟢</span>
+            <span class="diff-label">Easy</span>
+            <span class="diff-time">60s per Q</span>
+          </button>
+          <button class="diff-btn active" data-time="45" data-difficulty="medium">
+            <span class="diff-icon">🟡</span>
+            <span class="diff-label">Medium</span>
+            <span class="diff-time">45s per Q</span>
+          </button>
+          <button class="diff-btn" data-time="30" data-difficulty="hard">
+            <span class="diff-icon">🔴</span>
+            <span class="diff-label">Hard</span>
+            <span class="diff-time">30s per Q</span>
+          </button>
+        </div>
+      </div>
+      
+      <button class="start-btn" id="startBtn">
+        <span class="btn-text">START QUIZ</span>
+        <span class="btn-icon">🚀</span>
+      </button>
+      
+      <div class="leaderboard-preview" id="leaderboardPreview">
+        <h4>🏆 Top Scores</h4>
+        <div class="top-scores" id="topScores"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div class="quiz-screen hidden" id="quizScreen">
+    <!-- Header with Stats -->
+    <div class="quiz-header">
+      <div class="stat-card pulse">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <div class="stat-value" id="streak">0</div>
+          <div class="stat-label">Streak</div>
+        </div>
+      </div>
+      
+      <div class="timer-circle" id="timerCircle">
+        <svg class="timer-svg" viewBox="0 0 100 100">
+          <circle class="timer-bg" cx="50" cy="50" r="45"></circle>
+          <circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="timer-value" id="time">45</div>
+      </div>
+      
+      <div class="stat-card pulse">
+        <div class="stat-icon">💎</div>
+        <div class="stat-info">
+          <div class="stat-value" id="score">0</div>
+          <div class="stat-label">Coins</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question Card with 3D Effect -->
+    <div class="question-container">
+      <div class="question-card-3d" id="questionCard">
+        <div class="card-shine"></div>
+        <div class="question-header">
+          <span class="question-badge" id="questionNumber">Q1/10</span>
+          <span class="category-badge" id="category">General</span>
+        </div>
+        
+        <div class="question-text" id="question"></div>
+        
+        <div class="hint-box" id="hintBox">
+          <button class="hint-btn" id="hintBtn">
+            💡 Use Hint (-5 coins)
+          </button>
+          <div class="hint-content hidden" id="hint"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Options with Animations -->
+    <div class="options-grid" id="options"></div>
+
+    <!-- Power-ups Section -->
+    <div class="powerups-bar">
+      <button class="powerup-btn" id="fiftyFifty" title="50/50: Remove 2 wrong answers">
+        <span class="powerup-icon">⚡</span>
+        <span class="powerup-label">50/50</span>
+        <span class="powerup-count">2</span>
+      </button>
+      <button class="powerup-btn" id="skipQuestion" title="Skip Question">
+        <span class="powerup-icon">⏭️</span>
+        <span class="powerup-label">Skip</span>
+        <span class="powerup-count">1</span>
+      </button>
+      <button class="powerup-btn" id="freezeTime" title="Freeze Time (+15s)">
+        <span class="powerup-icon">⏸️</span>
+        <span class="powerup-label">Freeze</span>
+        <span class="powerup-count">1</span>
+      </button>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="feedback-modal hidden" id="feedbackModal">
+      <div class="feedback-content" id="feedbackContent"></div>
+    </div>
+
+    <!-- Next Button -->
+    <button class="next-btn hidden" id="nextBtn">
+      <span>NEXT QUESTION</span>
+      <span class="arrow">⟶</span>
+    </button>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-fill" id="progress"></div>
+      <div class="progress-text" id="progressText">1/10</div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div class="results-screen hidden" id="resultsScreen">
+    <div class="results-content">
+      <div class="results-animation" id="resultsAnimation"></div>
+      <h2 class="results-title">QUIZ COMPLETE!</h2>
+      <div class="final-score-display">
+        <div class="score-circle">
+          <div class="score-number" id="finalScore">0</div>
+          <div class="score-label">COINS</div>
+        </div>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="correctAnswers">0</div>
+          <div class="stat-desc">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="wrongAnswers">0</div>
+          <div class="stat-desc">Wrong</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="maxStreak">0</div>
+          <div class="stat-desc">Max Streak</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="accuracy">0%</div>
+          <div class="stat-desc">Accuracy</div>
+        </div>
+      </div>
+      
+      <div class="achievement-section" id="achievements"></div>
+      
+      <div class="name-input-section" id="nameInputSection">
+        <input type="text" id="playerName" placeholder="Enter your name" maxlength="20" />
+        <button class="save-score-btn" id="saveScoreBtn">💾 Save Score</button>
+      </div>
+      
+      <div class="results-actions">
+        <button class="action-btn primary" id="playAgainBtn">
+          <span>🔄 PLAY AGAIN</span>
+        </button>
+        <button class="action-btn secondary" id="viewLeaderboardBtn">
+          <span>🏆 LEADERBOARD</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Screen -->
+  <div class="leaderboard-screen hidden" id="leaderboardScreen">
+    <div class="leaderboard-content">
+      <h2 class="leaderboard-title">🏆 HALL OF FAME</h2>
+      <div class="leaderboard-list" id="leaderboardList"></div>
+      <button class="back-btn" id="backToResultsBtn">← Back</button>
+    </div>
+  </div>
+
+  <!-- Confetti Container -->
+  <canvas id="confetti"></canvas>
+
+  <!-- Audio Elements -->
+  <audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="wrongSound" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+  <audio id="powerupSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg"></audio>
+
+  <script src="confetti.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Define achievements
+    const achievements = {
+      perfectScore: {
+        title: "Perfect Score! 🏆",
+        description: "You answered all questions correctly!",
+        condition: state => state.coins === questions.length * 10
+      },
+      speedDemon: {
+        title: "Speed Demon! ⚡",
+        description: "Completed the quiz in record time!",
+        condition: state => state.timeLeft > 30
+      },
+      streakMaster: {
+        title: "Streak Master! 🔥",
+        description: "Achieved a streak of 5 or more!",
+        condition: state => state.maxStreak >= 5
+      },
+      coinCollector: {
+        title: "Coin Collector! 💎",
+        description: "Earned over 50 coins!",
+        condition: state => state.coins >= 50
+      }
+    };
+
+    // Add achievement check to endQuiz function
+    const originalEndQuiz = endQuiz;
+    endQuiz = function() {
+      originalEndQuiz();
+      
+      // Start confetti
+      window.confetti.start();
+      
+      // Check achievements
+      const achievementsEarned = [];
+      for (const [key, achievement] of Object.entries(achievements)) {
+        if (achievement.condition(gameState)) {
+          achievementsEarned.push(achievement);
+        }
+      }
+      
+      // Display achievements
+      const achievementsSection = document.getElementById("achievements");
+      if (achievementsEarned.length > 0) {
+        achievementsSection.innerHTML = `
+          <h3 style="color: var(--accent); margin-bottom: 20px;">🏆 Achievements Unlocked!</h3>
+          ${achievementsEarned.map((achievement, index) => `
+            <div class="achievement-item" style="animation-delay: ${index * 0.2}s">
+              <div class="achievement-icon">🏅</div>
+              <div class="achievement-info">
+                <div class="achievement-title">${achievement.title}</div>
+                <div class="achievement-desc">${achievement.description}</div>
+              </div>
+            </div>
+          `).join('')}
+        `;
+      } else {
+        achievementsSection.innerHTML = `
+          <h3 style="color: var(--accent); margin-bottom: 20px;">Keep trying to unlock achievements! 🎯</h3>
+        `;
+      }
+    };
+  </script>
+</body>
+</html>
